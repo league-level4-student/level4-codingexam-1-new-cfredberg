@@ -1,5 +1,7 @@
 package scheduler;
 
+import java.util.Scanner;
+
 /*
  * Objective: Create a weekly scheduling application.
  * 
@@ -24,8 +26,42 @@ package scheduler;
  *   variables.
  */
 public class Scheduler {
-
     public static void main(String[] args) {
-
+    	Scheduler scheduler = new Scheduler();
+    	while (scheduler.manage()) {
+    		
+    	}
+    	System.exit(0);
+    }
+    
+    Scanner scanner = new Scanner(System.in);
+    
+    public boolean manage() {
+//-------------------------------------------------------
+    	switch (answer) {
+    	case "a":
+    		
+    		return false;
+    		
+    	case "r":
+    		
+    		return false;
+    		
+    	case "v":
+    		
+    		return false;
+    	}
+		return true;
+    }
+    
+    public String question(String question, String[] options) {
+    	System.out.println(question);
+    	String answer = scanner.nextLine();
+    	for (String ans : options) {
+    		if (answer.equals(ans)) {
+    			return ans;
+    		}
+    	}
+    	return question(question, options);
     }
 }
