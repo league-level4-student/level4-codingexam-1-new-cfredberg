@@ -28,40 +28,92 @@ import java.util.Scanner;
 public class Scheduler {
     public static void main(String[] args) {
     	Scheduler scheduler = new Scheduler();
-    	while (scheduler.manage()) {
-    		
-    	}
-    	System.exit(0);
+    	scheduler.manage();
     }
     
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
     
-    public boolean manage() {
-//-------------------------------------------------------
-    	switch (answer) {
+    private void manage() {
+    	switch (question("Would you like to add an event, remove an event, view events, or quit? [a, r, v, q]", new String[]{"a", "r", "v", "q"})) {
     	case "a":
-    		
-    		return false;
-    		
+    		add();
+    		System.out.println("out");
+    		break;
     	case "r":
-    		
-    		return false;
-    		
+    		remove();
+    		break;
     	case "v":
-    		
-    		return false;
+    		view();
+    		break;
+    	case "q":
+    		System.exit(0);
     	}
-		return true;
+    	manage();
     }
     
-    public String question(String question, String[] options) {
-    	System.out.println(question);
-    	String answer = scanner.nextLine();
+    private String question(String question, String[] options) {
+    	String answer = prompt(question);
     	for (String ans : options) {
     		if (answer.equals(ans)) {
     			return ans;
     		}
     	}
     	return question(question, options);
+    }
+    
+    private String prompt(String question) {
+    	System.out.println(question);
+    	return scanner.nextLine();
+    }
+    
+    private String[] requestTime(String question) {
+    	String answer = prompt(question);
+    	// hm: hours minutes
+    	String[] hm = answer.split(":");
+    	
+    	if (hm.length != 2) {
+    		System.out.println("Invalid Time");
+    		return requestTime(question);
+    	}
+    	
+    	return hm;
+    }
+    
+    private boolean validateTime(String[] time) {
+    	//true: time is good
+    	//false: invalid time
+    	int hour = Integer.parseInt(time[0]);
+    	int min = Integer.parseInt(time[1]);
+    	if (hour >= 0 && hour <= 24 && min >= 0 && min < 60) {
+    		return true;
+    	}
+    	System.out.println("Invalid Time");
+    	return false;
+    }
+    
+    private void add() {
+    	String event = prompt("What is this event?");
+    	
+    	String[] time = requestTime("What time is this event at?");
+    	
+    	while (!validateTime(time)) {
+    		time = requestTime("What time is this event at?");
+    	}
+    	
+    	try {
+    		if (time == null) {
+    			throw new SchedulingConflictException();
+    		}
+    	}catch(SchedulingConflictException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    private void remove() {
+    	
+    }
+    
+    private void view() {
+    	
     }
 }

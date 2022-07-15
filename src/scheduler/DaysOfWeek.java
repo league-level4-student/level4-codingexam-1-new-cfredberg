@@ -3,5 +3,13 @@ package scheduler;
 public enum DaysOfWeek {
 	SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY;
 	
-	LinkedList day = new LinkedList<String[]>();
+	private LinkedList<String[]> schedule = new LinkedList<String[]>();
+	
+	public LinkedList getSchedule() {
+		return schedule;
+	}
+	
+	public void setSchedule(LinkedList<String[]> schedule) {
+		this.schedule = schedule;
+	}
 }
