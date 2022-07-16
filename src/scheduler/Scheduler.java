@@ -28,10 +28,19 @@ import java.util.Scanner;
 public class Scheduler {
     public static void main(String[] args) {
     	Scheduler scheduler = new Scheduler();
+    	scheduler.init();
     	scheduler.manage();
     }
     
     private Scanner scanner = new Scanner(System.in);
+    
+    DaysOfWeek[] week = new DaysOfWeek[7];
+    
+    private void init() {
+    	for (int i = 0; i < DaysOfWeek.values().length; i++) {
+    		week[i] = DaysOfWeek.values()[i];
+    	}
+    }
     
     private void manage() {
     	switch (question("Would you like to add an event, remove an event, view events, or quit? [a, r, v, q]", new String[]{"a", "r", "v", "q"})) {
@@ -52,7 +61,7 @@ public class Scheduler {
     }
     
     private String question(String question, String[] options) {
-    	String answer = prompt(question);
+    	String answer = prompt(question).toLowerCase();
     	for (String ans : options) {
     		if (answer.equals(ans)) {
     			return ans;
@@ -94,14 +103,49 @@ public class Scheduler {
     private void add() {
     	String event = prompt("What is this event?");
     	
-    	String[] time = requestTime("What time is this event at?");
+    	String dayS = question("What day is this event?", new String[]{"saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"});
     	
-    	while (!validateTime(time)) {
-    		time = requestTime("What time is this event at?");
+    	DaysOfWeek day = DaysOfWeek.SATURDAY;
+    	
+    	switch(dayS) {
+    	case "sunday":
+    		day = DaysOfWeek.SUNDAY;
+    		break;
+    		
+    	case "monday":
+    		day = DaysOfWeek.MONDAY;
+    		break;
+    		
+    	case "tuesday":
+    		day = DaysOfWeek.TUESDAY;
+    		break;
+    		
+    	case "wednesday":
+    		day = DaysOfWeek.WEDNESDAY;
+    		break;
+    		
+    	case "thursday":
+    		day = DaysOfWeek.THURSDAY;
+    		break;
+    		
+    	case "friday":
+    		day = DaysOfWeek.FRIDAY;
     	}
     	
+    	String[] timeS = requestTime("What time is this event at?");
+    	
+    	while (!validateTime(timeS)) {
+    		timeS = requestTime("What time is this event at?");
+    	}
+    	
+    	int time = (Integer.parseInt(timeS[0])*100)+Integer.parseInt(timeS[1]);
+    	
+    	System.out.println(time);
+    	
     	try {
-    		if (time == null) {
+    		//-----------------------------------------------
+    		
+    		if (timeS == null) {
     			throw new SchedulingConflictException();
     		}
     	}catch(SchedulingConflictException e) {
