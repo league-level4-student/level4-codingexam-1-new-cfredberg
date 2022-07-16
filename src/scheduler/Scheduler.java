@@ -143,7 +143,10 @@ public class Scheduler {
     	System.out.println(time);
     	
     	try {
-    		//-----------------------------------------------
+    		Node<String[]> list = day.getSchedule().getHead();
+    		for (int i = 0; i < day.getSchedule().size(); i++) {
+    			
+    		}
     		
     		if (timeS == null) {
     			throw new SchedulingConflictException();
