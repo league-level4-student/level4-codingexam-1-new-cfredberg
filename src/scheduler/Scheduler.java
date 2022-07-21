@@ -45,7 +45,12 @@ public class Scheduler {
     private void manage() {
     	switch (question("Would you like to add an event, remove an event, view events, or quit? [a, r, v, q]", new String[]{"a", "r", "v", "q"})) {
     	case "a":
-    		add();
+    		try {
+    			add();
+    		} catch(SchedulingConflictException e) {
+    			System.out.println("hi");
+    			e.printStackTrace();
+    		}
     		System.out.println("out");
     		break;
     	case "r":
@@ -100,36 +105,36 @@ public class Scheduler {
     	return false;
     }
     
-    private void add() {
+    private void add() throws SchedulingConflictException {
     	String event = prompt("What is this event?");
     	
     	String dayS = question("What day is this event?", new String[]{"saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"});
     	
-    	DaysOfWeek day = DaysOfWeek.SATURDAY;
+    	int day = 0;
     	
     	switch(dayS) {
     	case "sunday":
-    		day = DaysOfWeek.SUNDAY;
+    		day = 1;
     		break;
     		
     	case "monday":
-    		day = DaysOfWeek.MONDAY;
+    		day = 2;
     		break;
     		
     	case "tuesday":
-    		day = DaysOfWeek.TUESDAY;
+    		day = 3;
     		break;
     		
     	case "wednesday":
-    		day = DaysOfWeek.WEDNESDAY;
+    		day = 4;
     		break;
     		
     	case "thursday":
-    		day = DaysOfWeek.THURSDAY;
+    		day = 5;
     		break;
     		
     	case "friday":
-    		day = DaysOfWeek.FRIDAY;
+    		day = 6;
     	}
     	
     	String[] timeS = requestTime("What time is this event at?");
@@ -142,18 +147,34 @@ public class Scheduler {
     	
     	System.out.println(time);
     	
-    	try {
-    		Node<String[]> list = day.getSchedule().getHead();
-    		for (int i = 0; i < day.getSchedule().size(); i++) {
-    			
-    		}
-    		
-    		if (timeS == null) {
-    			throw new SchedulingConflictException();
-    		}
-    	}catch(SchedulingConflictException e) {
-    		e.printStackTrace();
-    	}
+    	LinkedList<String[]> list = week[day].getSchedule();
+		Node<String[]> node = list.getHead();
+		for (int i = 0; i < list.size(); i++) {
+			int tempTime = (Integer.parseInt(node.getValue()[0]));
+			System.out.println(tempTime);
+			if (tempTime == time) {
+				throw new SchedulingConflictException();
+			}
+			if (i < list.size()-1) {
+				node = node.getNext();
+			}
+		}
+		
+		node = list.getHead();
+		Node<String[]> newNode = new Node<String[]>(new String[] {""+time, event});
+		for (int i = 0; i < list.size(); i++) {
+			if (Integer.parseInt(node.getValue()[0]) < time && Integer.parseInt(node.getNext().getValue()[0]) > time) {
+				node.getNext().setPrev(newNode);
+				newNode.setNext(node.getNext());
+				newNode.setPrev(node);
+				node.setNext(newNode);
+				break;
+			}
+			if (i < list.size()-1) {
+				node = node.getNext();
+			}
+		}
+		week[day].setSchedule(list);
     }
     
     private void remove() {

@@ -5,7 +5,7 @@ public enum DaysOfWeek {
 	
 	private LinkedList<String[]> schedule = new LinkedList<String[]>();
 	
-	public LinkedList getSchedule() {
+	public LinkedList<String[]> getSchedule() {
 		return schedule;
 	}
 	
