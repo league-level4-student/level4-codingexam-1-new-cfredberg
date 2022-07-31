@@ -37,8 +37,15 @@ public class Scheduler {
     DaysOfWeek[] week = new DaysOfWeek[7];
     
     private void init() {
+    	Node<String[]> firstNode = new Node<String[]>(new String[]{"-1", "first"});
+    	Node<String[]> lastNode = new Node<String[]>(new String[]{"2460", "last"});
     	for (int i = 0; i < DaysOfWeek.values().length; i++) {
     		week[i] = DaysOfWeek.values()[i];
+    		LinkedList<String[]> list = week[i].getSchedule();
+    		list.setHead(firstNode);
+    		firstNode.setNext(lastNode);
+    		week[i].setSchedule(list);
+    		System.out.println(week[i].getSchedule().size());
     	}
     }
     
@@ -147,6 +154,7 @@ public class Scheduler {
     	
     	System.out.println(time);
     	
+    	// check to make sure there isn't already one that exists at this time
     	LinkedList<String[]> list = week[day].getSchedule();
 		Node<String[]> node = list.getHead();
 		for (int i = 0; i < list.size(); i++) {
@@ -160,10 +168,12 @@ public class Scheduler {
 			}
 		}
 		
+		// add it to the list
 		node = list.getHead();
 		Node<String[]> newNode = new Node<String[]>(new String[] {""+time, event});
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(node.getValue()[0]) < time && Integer.parseInt(node.getNext().getValue()[0]) > time) {
+				System.out.println(day);
 				node.getNext().setPrev(newNode);
 				newNode.setNext(node.getNext());
 				newNode.setPrev(node);
@@ -175,6 +185,10 @@ public class Scheduler {
 			}
 		}
 		week[day].setSchedule(list);
+		
+		for (int i = 0; i < week.length; i++) {
+			System.out.println(week[i].getSchedule().size());
+		}
     }
     
     private void remove() {
@@ -182,6 +196,16 @@ public class Scheduler {
     }
     
     private void view() {
-    	
+    	for (int i = 0; i < 7; i++) {
+    		System.out.println("Day " + i);
+    		LinkedList<String[]> list = week[i].getSchedule();
+    		Node<String[]> current = list.getHead();
+    		for (int j = 0; j < list.size(); j++) {
+    			System.out.println(current.getValue()[1]);
+    			if (j < list.size()-1) {
+    				current = current.getNext();
+    			}
+    		}
+    	}
     }
 }
