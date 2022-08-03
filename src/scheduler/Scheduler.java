@@ -37,9 +37,9 @@ public class Scheduler {
     DaysOfWeek[] week = new DaysOfWeek[7];
     
     private void init() {
-    	Node<String[]> firstNode = new Node<String[]>(new String[]{"-1", "first"});
-    	Node<String[]> lastNode = new Node<String[]>(new String[]{"2460", "last"});
     	for (int i = 0; i < DaysOfWeek.values().length; i++) {
+    		Node<String[]> firstNode = new Node<String[]>(new String[]{"-1", "first"});
+        	Node<String[]> lastNode = new Node<String[]>(new String[]{"2460", "last"});
     		week[i] = DaysOfWeek.values()[i];
     		LinkedList<String[]> list = week[i].getSchedule();
     		list.setHead(firstNode);
@@ -55,10 +55,8 @@ public class Scheduler {
     		try {
     			add();
     		} catch(SchedulingConflictException e) {
-    			System.out.println("hi");
     			e.printStackTrace();
     		}
-    		System.out.println("out");
     		break;
     	case "r":
     		remove();
@@ -113,7 +111,7 @@ public class Scheduler {
     }
     
     private void add() throws SchedulingConflictException {
-    	String event = prompt("What is this event?");
+    	String event = prompt("What is this event?").toLowerCase();
     	
     	String dayS = question("What day is this event?", new String[]{"saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"});
     	
@@ -192,7 +190,40 @@ public class Scheduler {
     }
     
     private void remove() {
+    	String dayS = question("What day is this event?", new String[]{"saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"});
     	
+    	int day = 0;
+    	
+    	switch(dayS) {
+    	case "sunday":
+    		day = 1;
+    		break;
+    		
+    	case "monday":
+    		day = 2;
+    		break;
+    		
+    	case "tuesday":
+    		day = 3;
+    		break;
+    		
+    	case "wednesday":
+    		day = 4;
+    		break;
+    		
+    	case "thursday":
+    		day = 5;
+    		break;
+    		
+    	case "friday":
+    		day = 6;
+    	}
+    	
+    	String event = prompt("What event would you like to remove?").toLowerCase();
+    	
+    	LinkedList<String[]> list = week[day].getSchedule();
+    	
+    	//for ()
     }
     
     private void view() {
