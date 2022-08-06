@@ -219,11 +219,28 @@ public class Scheduler {
     		day = 6;
     	}
     	
-    	String event = prompt("What event would you like to remove?").toLowerCase();
+    	String[] timeS = requestTime("What time is this event at?");
+    	
+    	while (!validateTime(timeS)) {
+    		timeS = requestTime("What time is this event at?");
+    	}
+    	
+    	int time = (Integer.parseInt(timeS[0])*100)+Integer.parseInt(timeS[1]);
     	
     	LinkedList<String[]> list = week[day].getSchedule();
+    	Node<String[]> current = list.getHead();
     	
-    	//for ()
+    	for (int i = 0; i < list.size(); i++) {
+    		if (Integer.parseInt(current.getValue()[0]) == time) {
+    			current.getPrev().setNext(current.getNext());
+    			current.getNext().setPrev(current.getPrev());
+    			break;
+    		}
+    		if (i < list.size()-1) {
+    			current = current.getNext();
+    		}
+    	}
+    	week[day].setSchedule(list);
     }
     
     private void view() {
@@ -232,7 +249,7 @@ public class Scheduler {
     		LinkedList<String[]> list = week[i].getSchedule();
     		Node<String[]> current = list.getHead();
     		for (int j = 0; j < list.size(); j++) {
-    			System.out.println(current.getValue()[1]);
+    			System.out.println(current.getValue()[1] + " at " + current.getValue()[0]);
     			if (j < list.size()-1) {
     				current = current.getNext();
     			}
